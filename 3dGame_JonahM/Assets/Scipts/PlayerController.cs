@@ -1,12 +1,14 @@
+using Mono.Cecil.Cil;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     [SerializeField]
-    private float speed;
+    public float speed;
     public Camera cam;
     public Vector3 camOFFset;
+    private float speedMultiplier = 9.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,5 +27,21 @@ public class PlayerController : MonoBehaviour
         Vector2 movementVector = movementValue.Get<Vector2>();
         rb.linearVelocity = new Vector3(movementVector.x,0, movementVector.y)*speed;
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SpeedBoost"))
+        {
+            speed *= speedMultiplier;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("SpeedBoost"))
+        {
+            speed /= speedMultiplier;
+        }
     }
 }
